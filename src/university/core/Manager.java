@@ -2,6 +2,7 @@ package university.core;
 
 import university.news.News;
 import university.utils.FileHandler;
+import university.core.Student;
 import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
@@ -9,6 +10,7 @@ import java.util.List;
 import java.util.Scanner;
 
 public class Manager extends User {
+    private static final String STUDENT_FILE = "src/university/data/students.json";
     private static final String NEWS_FILE = "src/university/data/news.json";
 
     public Manager(String username, String password, String firstName, String lastName, String department) {
@@ -24,7 +26,8 @@ public class Manager extends User {
             System.out.println("1 - View News");
             System.out.println("2 - Add News");
             System.out.println("3 - Delete News");
-            System.out.println("4 - Logout");
+            System.out.println("4 - View Students");
+            System.out.println("5 - Logout");
             System.out.print("Enter your choice: ");
 
             int choice = scanner.nextInt();
@@ -34,7 +37,8 @@ public class Manager extends User {
                 case 1 -> viewNews();   // View all news
                 case 2 -> addNews();    // Add new news
                 case 3 -> deleteNews(); // Delete news
-                case 4 -> {
+                case 4 -> viewStudents(); // View students
+                case 5 -> {
                     System.out.println("Logging out...");
                     return; // Exit manager menu
                 }
@@ -112,9 +116,28 @@ public class Manager extends User {
         }
     }
 
+    // View all students
+    public void viewStudents() {
+        List<Student> students = loadStudents();
+        if (students.isEmpty()) {
+            System.out.println("No students available.");
+        } else {
+            System.out.println("\nStudent List:");
+            for (Student student : students) {
+                System.out.println(student); // Assuming Student class has a toString() method
+            }
+        }
+    }
+
     // Load news from JSON
     private List<News> loadNews() {
         Type newsListType = new TypeToken<List<News>>() {}.getType();
         return FileHandler.loadFromFile(NEWS_FILE, newsListType);
+    }
+
+    // Load students from JSON
+    private List<Student> loadStudents() {
+        Type studentListType = new TypeToken<List<Student>>() {}.getType();
+        return FileHandler.loadFromFile(STUDENT_FILE, studentListType);
     }
 }
