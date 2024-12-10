@@ -50,8 +50,8 @@ public class Manager extends User {
             System.out.println("No news available.");
         } else {
             System.out.println("\nLatest News:");
-            for (int i = 0; i < newsList.size(); i++) {
-                System.out.println((i + 1) + ". " + newsList.get(i));
+            for (News news : newsList) {
+                System.out.println(news);
             }
         }
     }
@@ -66,34 +66,49 @@ public class Manager extends User {
         System.out.print("Enter the description of the news: ");
         String description = scanner.nextLine();
 
-        News news = new News(title, description);
+        System.out.print("Enter the date of the news (format: YYYY-MM-DD or any format you prefer): ");
+        String date = scanner.nextLine();
+
+        News news = new News(title, description, date);
         List<News> newsList = loadNews();
+        news.setId(newsList.size() + 1); // Assign sequential ID
         newsList.add(news);
         FileHandler.saveToFile(newsList, NEWS_FILE);
 
         System.out.println("News added successfully!");
     }
 
-    // Delete a news item
+    // Delete a news item and reassign IDs
     public void deleteNews() {
-        List<News> newsList = loadNews();
+        List<News> newsList = loadNews(); // Load existing news from the file
         if (newsList.isEmpty()) {
             System.out.println("No news available to delete.");
             return;
         }
 
-        viewNews();
+        // Display news items
+        System.out.println("\nNews List:");
+        for (News news : newsList) {
+            System.out.println(news);
+        }
+
+        // Ask the manager to select a news item by ID
         Scanner scanner = new Scanner(System.in);
+        System.out.print("Enter the ID of the news to delete: ");
+        int newsId = scanner.nextInt();
 
-        System.out.print("Enter the number of the news to delete: ");
-        int newsNumber = scanner.nextInt();
+        // Remove the selected news
+        boolean removed = newsList.removeIf(news -> news.getId() == newsId);
 
-        if (newsNumber < 1 || newsNumber > newsList.size()) {
-            System.out.println("Invalid choice. Please try again.");
+        if (removed) {
+            // Reassign IDs after deletion
+            for (int i = 0; i < newsList.size(); i++) {
+                newsList.get(i).setId(i + 1); // Reassign sequential IDs
+            }
+            FileHandler.saveToFile(newsList, NEWS_FILE); // Save updated news list to the file
+            System.out.println("News deleted and IDs reassigned successfully!");
         } else {
-            newsList.remove(newsNumber - 1);
-            FileHandler.saveToFile(newsList, NEWS_FILE);
-            System.out.println("News deleted successfully!");
+            System.out.println("No news found with the given ID. Please try again.");
         }
     }
 
