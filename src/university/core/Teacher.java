@@ -9,6 +9,8 @@ import university.academics.Grade;
 
 import java.util.List;
 import java.util.Scanner;
+import java.util.ArrayList;
+
 
 public class Teacher extends User {
     private String subject;
@@ -46,7 +48,11 @@ public class Teacher extends User {
 
             switch (choice) {
                 case 1 -> markAttendance();
-                case 2 -> viewAttendance();
+                case 2 -> {
+                    System.out.print("Enter the course ID to view attendance: ");
+                    String courseId = scanner.nextLine();
+                    viewAttendance(courseId);
+                }
                 case 3 -> assignGrades();
                 case 4 -> {
                     System.out.println("Logging out...");
@@ -101,17 +107,26 @@ public class Teacher extends User {
         System.out.println("Attendance marked successfully!");
     }
 
-    public void viewAttendance() {
-        List<Attendance> attendanceList = FileHandler.loadFromFile("src/university/data/attendance.json",
-                new TypeToken<List<Attendance>>() {}.getType());
+    public void viewAttendance(String courseId) {
+        List<Course> courses = FileHandler.loadFromFile("src/university/data/courses.json",
+                new TypeToken<List<Course>>() {}.getType());
 
-        System.out.println("\nAttendance Records:");
-        for (Attendance attendance : attendanceList) {
-            if (attendance.getCourse().equals(subject)) {
-                System.out.println(attendance);
+        for (Course course : courses) {
+            if (course.getId().equals(courseId)) {
+                System.out.println("Attendance Records for Course: " + courseId);
+
+                for (LectureAttendance lectureAttendance : course.getAttendanceRecords()) {
+                    System.out.println("Lecture: " + lectureAttendance.getLecture());
+                    for (StudentAttendance studentAttendance : lectureAttendance.getStudents()) {
+                        System.out.println("- " + studentAttendance.getStudent() + ": " + studentAttendance.getStatus());
+                    }
+                }
+                return;
             }
         }
+        System.out.println("Course not found.");
     }
+
     public void assignGrades() {
         Scanner scanner = new Scanner(System.in);
 
@@ -143,5 +158,38 @@ public class Teacher extends User {
 
         System.out.println("Grades assigned successfully!");
     }
+
+    public void markAttendance() {
+        Scanner scanner = new Scanner(System.in);
+
+        System.out.print("Enter the course ID to mark attendance: ");
+        String courseId = scanner.nextLine();
+
+        System.out.print("Enter the lecture identifier (e.g., Lecture 1): ");
+        String lecture = scanner.nextLine();
+
+        List<Course> courses = FileHandler.loadFromFile("src/university/data/courses.json",
+                new TypeToken<List<Course>>() {}.getType());
+
+        for (Course course : courses) {
+            if (course.getId().equals(courseId)) {
+                LectureAttendance lectureAttendance = new LectureAttendance(lecture, new ArrayList<>());
+
+                for (String student : course.getStudentsEnrolled()) {
+                    System.out.print("Mark attendance for " + student + " (P/A): ");
+                    String status = scanner.nextLine().equalsIgnoreCase("P") ? "Present" : "Absent";
+
+                    lectureAttendance.getStudents().add(new StudentAttendance(student, status));
+                }
+
+                course.getAttendanceRecords().add(lectureAttendance);
+                FileHandler.saveToFile(courses, "src/university/data/courses.json");
+                System.out.println("Attendance marked successfully for " + lecture);
+                return;
+            }
+        }
+        System.out.println("Course not found.");
+    }
+
 
 }
