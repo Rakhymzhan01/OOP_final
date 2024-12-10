@@ -3,21 +3,21 @@ package university.academics;
 import java.util.List;
 
 public class LectureAttendance {
-    private String lecture; // e.g., "Lecture 1", "Lecture 2"
-    private List<StudentAttendance> students;
+    private String lectureId; // Matches "lectureId" in JSON
+    private List<StudentAttendance> students; // List of student attendance
 
-    public LectureAttendance(String lecture, List<StudentAttendance> students) {
-        this.lecture = lecture;
+    public LectureAttendance(String lectureId, List<StudentAttendance> students) {
+        this.lectureId = lectureId;
         this.students = students;
     }
 
     // Getters and setters
-    public String getLecture() {
-        return lecture;
+    public String getLectureId() {
+        return lectureId;
     }
 
-    public void setLecture(String lecture) {
-        this.lecture = lecture;
+    public void setLectureId(String lectureId) {
+        this.lectureId = lectureId;
     }
 
     public List<StudentAttendance> getStudents() {
