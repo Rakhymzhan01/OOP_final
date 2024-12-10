@@ -1,1 +1,34 @@
-[]
+[
+  {
+    "id": "CS101",
+    "name": "Introduction to Computer Science",
+    "credits": 3,
+    "type": "LECTURE",
+    "prerequisite": null,
+    "studentsEnrolled": ["r_demessinov", "student2"]
+  },
+  {
+    "id": "CS102",
+    "name": "Data Structures and Algorithms",
+    "credits": 4,
+    "type": "LECTURE",
+    "prerequisite": "CS101",
+    "studentsEnrolled": ["r_demessinov"]
+  },
+  {
+    "id": "CS103",
+    "name": "Database Systems",
+    "credits": 3,
+    "type": "LABORATORY",
+    "prerequisite": "CS102",
+    "studentsEnrolled": ["student3", "student4"]
+  },
+  {
+    "id": "CS104",
+    "name": "Operating Systems",
+    "credits": 4,
+    "type": "LECTURE",
+    "prerequisite": "CS102",
+    "studentsEnrolled": []
+  }
+]
