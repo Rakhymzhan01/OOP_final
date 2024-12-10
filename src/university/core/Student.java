@@ -109,9 +109,9 @@ public class Student extends User {
     }
 
     private double calculateTotalGrade(Grade grade) {
-        return grade.getFirstAttestation() * 0.3 +
-                grade.getSecondAttestation() * 0.3 +
-                grade.getFinalExam() * 0.4;
+        return grade.getFirstAttestation() +
+                grade.getSecondAttestation() +
+                grade.getFinalExam();
     }
 
     private String getLetterGrade(double totalGrade) {

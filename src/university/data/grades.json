@@ -1,1 +1,23 @@
-[]
+[
+  {
+    "student": "r_demessinov",
+    "course": "CS101",
+    "firstAttestation": 25,
+    "secondAttestation": 30,
+    "finalExam": 40
+  },
+  {
+    "student": "r_demessinov",
+    "course": "CS102",
+    "firstAttestation": 20,
+    "secondAttestation": 25,
+    "finalExam": 35
+  },
+  {
+    "student": "r_demessinov",
+    "course": "CS103",
+    "firstAttestation": 18,
+    "secondAttestation": 22,
+    "finalExam": 30
+  }
+]
