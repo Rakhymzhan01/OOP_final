@@ -34,6 +34,14 @@ public class Student extends User {
     }
 
     @Override
+    public String toString() {
+        return "Student Details:\n" +
+                "Username: " + getUsername() + "\n" +
+                "Name: " + getFirstName() + " " + getLastName() + "\n" +
+                "Faculty: " + faculty + "\n";
+    }
+
+    @Override
     public void viewMenu() {
         Scanner scanner = new Scanner(System.in);
         while (true) {
