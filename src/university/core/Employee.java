@@ -1,9 +1,11 @@
 package university.core;
 
+import java.util.Scanner;
+
 public class Employee extends User {
-    private String department;
-    private String role;
-    private double salary;
+    private String department; // Department of the employee
+    private String role;       // Specific role of the employee
+    private double salary;     // Employee's salary
 
     public Employee(String username, String password, String firstName, String lastName, String department, String role, double salary) {
         super(username, password, firstName, lastName);
