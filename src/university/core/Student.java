@@ -1,24 +1,36 @@
 package university.core;
 
-import java.util.List; // For List usage
-import java.util.ArrayList; // If needed for List initialization
-import java.util.Scanner; // For user input
-import java.io.Writer; // For writing files
-import java.io.FileWriter; // For file writing
-import java.io.IOException; // For handling IO exceptions
-import university.academics.Grade; // For Grade class
-import university.academics.Attendance; // For Attendance class (if defined)
-import university.utils.FileHandler; // For FileHandler class
-import com.google.gson.reflect.TypeToken; // For TypeToken with Gson
 import university.academics.Course;
+import university.academics.Transcript;
+import university.grades.Mark;
+import university.utils.FileHandler;
+import com.google.gson.reflect.TypeToken;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
 
 public class Student extends User {
     private String faculty;
+    private Transcript transcript;
 
     public Student(String username, String password, String firstName, String lastName, String faculty) {
         super(username, password, firstName, lastName);
         this.faculty = faculty;
+
+        // Load grades from JSON for the transcript
+        List<Mark> marks = FileHandler.loadFromFile("src/university/data/grades.json",
+                new TypeToken<List<Mark>>() {}.getType());
+        if (marks == null) {
+            System.out.println("Grades file not found or empty.");
+            marks = new ArrayList<>(); // Ensure marks list is initialized
+        } else {
+            System.out.println("Loaded marks: " + marks);
+        }
+
+        // Initialize the transcript
+        this.transcript = new Transcript(firstName, lastName, username, 1, marks);
+        System.out.println("Transcript initialized successfully.");
     }
 
     public String getFaculty() {
@@ -29,8 +41,61 @@ public class Student extends User {
         this.faculty = faculty;
     }
 
-    public String getName() {
-        return getFirstName() + " " + getLastName();
+    public void viewCourses() {
+        List<Course> courses = FileHandler.loadFromFile("src/university/data/courses.json",
+                new TypeToken<List<Course>>() {}.getType());
+
+        if (courses == null || courses.isEmpty()) {
+            System.out.println("No courses available.");
+            return;
+        }
+
+        System.out.println("\nCourses Enrolled:");
+        for (Course course : courses) {
+            System.out.println("- " + course.getName());
+        }
+    }
+
+    public void viewGrades() {
+        if (transcript == null || transcript.getMarks() == null) {
+            System.out.println("No grades available.");
+            return;
+        }
+
+        List<Mark> marks = transcript.getMarks();
+
+        System.out.println("\nYour Grades:");
+        for (Mark mark : marks) {
+            System.out.println("- " + mark.getCourseName() + ": First Attestation: " + mark.getFirstAttestation()
+                    + ", Second Attestation: " + mark.getSecondAttestation()
+                    + ", Final Exam: " + mark.getFinalExam()
+                    + ", Total: " + mark.getTotalMark()
+                    + " (" + mark.getLiteralMark() + ")");
+        }
+    }
+
+    public void getTranscript() {
+        if (transcript == null) {
+            System.out.println("Transcript data is unavailable.");
+            return;
+        }
+
+        System.out.println(transcript.showTranscript());
+        saveTranscriptPrompt();
+    }
+
+    private void saveTranscriptPrompt() {
+        Scanner scanner = new Scanner(System.in);
+        System.out.print("\nWould you like to save this transcript to a file? (yes/no): ");
+        String response = scanner.nextLine().trim().toLowerCase();
+
+        if (response.equals("yes")) {
+            System.out.print("Enter the file name to save the transcript (e.g., transcript.txt): ");
+            String fileName = scanner.nextLine().trim();
+            transcript.saveTranscriptToFile(fileName);
+        } else {
+            System.out.println("Transcript not saved.");
+        }
     }
 
     @Override
@@ -53,100 +118,18 @@ public class Student extends User {
                 case 3 -> getTranscript();
                 case 4 -> {
                     System.out.println("Logging out...");
-                    return; // Exit the menu loop
+                    return;
                 }
                 default -> System.out.println("Invalid choice. Please try again.");
             }
         }
     }
 
-    public void getTranscript() {
-        List<Grade> grades = FileHandler.loadFromFile("src/university/data/grades.json",
-                new TypeToken<List<Grade>>() {}.getType());
-
-        StringBuilder transcriptBuilder = new StringBuilder();
-        transcriptBuilder.append("Transcript for ").append(getName()).append("\n\n");
-
-        for (Grade grade : grades) {
-            if (grade.getStudent().equals(getUsername())) {
-                double totalGrade = calculateTotalGrade(grade);
-                String letterGrade = getLetterGrade(totalGrade);
-                transcriptBuilder.append("- Course: ").append(grade.getCourse())
-                        .append("\n  Total Grade: ").append(totalGrade)
-                        .append(" (").append(letterGrade).append(")\n");
-            }
-        }
-
-        String transcript = transcriptBuilder.toString();
-        System.out.println(transcript);
+    @Override
+    public String toString() {
+        return "Student Details:\n" +
+                "Username: " + getUsername() + "\n" +
+                "Name: " + getFirstName() + " " + getLastName() + "\n" +
+                "Faculty: " + faculty + "\n";
     }
-
-    public void saveTranscriptToFile(String fileName) {
-        StringBuilder transcriptBuilder = new StringBuilder();
-        transcriptBuilder.append("Transcript for ").append(getName()).append("\n\n");
-
-        List<Grade> grades = FileHandler.loadFromFile("src/university/data/grades.json",
-                new TypeToken<List<Grade>>() {}.getType());
-
-        for (Grade grade : grades) {
-            if (grade.getStudent().equals(getUsername())) {
-                double totalGrade = calculateTotalGrade(grade);
-                String letterGrade = getLetterGrade(totalGrade);
-                transcriptBuilder.append("- Course: ").append(grade.getCourse())
-                        .append("\n  Total Grade: ").append(totalGrade)
-                        .append(" (").append(letterGrade).append(")\n");
-            }
-        }
-
-        String transcript = transcriptBuilder.toString();
-
-        try (Writer writer = new FileWriter(fileName)) {
-            writer.write(transcript);
-            System.out.println("Transcript saved successfully to " + fileName);
-        } catch (IOException e) {
-            System.out.println("Error saving transcript: " + e.getMessage());
-        }
-    }
-
-    private double calculateTotalGrade(Grade grade) {
-        return grade.getFirstAttestation() +
-                grade.getSecondAttestation() +
-                grade.getFinalExam();
-    }
-
-    private String getLetterGrade(double totalGrade) {
-        if (totalGrade >= 90) return "A";
-        else if (totalGrade >= 80) return "B";
-        else if (totalGrade >= 70) return "C";
-        else if (totalGrade >= 60) return "D";
-        else return "F";
-    }
-
-    public void viewCourses() {
-        List<Course> courses = FileHandler.loadFromFile("src/university/data/courses.json",
-                new com.google.gson.reflect.TypeToken<List<Course>>() {}.getType());
-
-        System.out.println("\nCourses Enrolled:");
-        for (Course course : courses) {
-            if (course.getStudentsEnrolled().contains(getUsername())) {
-                System.out.println("- " + course.getName());
-            }
-        }
-    }
-
-
-    public void viewGrades() {
-        List<Grade> grades = FileHandler.loadFromFile("src/university/data/grades.json",
-                new com.google.gson.reflect.TypeToken<List<Grade>>() {}.getType());
-
-        System.out.println("\nYour Grades:");
-        for (Grade grade : grades) {
-            if (grade.getStudent().equals(getUsername())) {
-                System.out.println("- " + grade.getCourse() + ": First Attestation: " + grade.getFirstAttestation()
-                        + ", Second Attestation: " + grade.getSecondAttestation()
-                        + ", Final Exam: " + grade.getFinalExam());
-            }
-        }
-    }
-
 }
