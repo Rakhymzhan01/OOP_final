@@ -1,14 +1,15 @@
 package university.core;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
+import university.academics.LectureAttendance;
+import university.academics.StudentAttendance;
 import university.academics.Course;
-import university.academics.Attendance;
 import university.utils.FileHandler;
 import com.google.gson.reflect.TypeToken;
 import university.academics.Grade;
 
-
-import java.util.List;
-import java.util.Scanner;
 
 public class Teacher extends User {
     private String subject;
@@ -46,7 +47,11 @@ public class Teacher extends User {
 
             switch (choice) {
                 case 1 -> markAttendance();
-                case 2 -> viewAttendance();
+                case 2 -> {
+                    System.out.print("Enter the course ID to view attendance: ");
+                    String courseId = scanner.nextLine();
+                    viewAttendance(courseId);
+                }
                 case 3 -> assignGrades();
                 case 4 -> {
                     System.out.println("Logging out...");
@@ -73,45 +78,72 @@ public class Teacher extends User {
     public void markAttendance() {
         Scanner scanner = new Scanner(System.in);
 
-        System.out.println("Enter the course ID to mark attendance: ");
+        System.out.print("Enter the course ID to mark attendance: ");
         String courseId = scanner.nextLine();
 
-        List<String> enrolledStudents = getEnrolledStudents(courseId);
+        System.out.print("Enter the lecture identifier (e.g., Lecture 1): ");
+        String lecture = scanner.nextLine();
 
-        if (enrolledStudents.isEmpty()) {
-            System.out.println("No students enrolled in this course.");
-            return;
-        }
+        List<Course> courses = FileHandler.loadFromFile("src/university/data/courses.json",
+                new TypeToken<List<Course>>() {}.getType());
 
-        List<Attendance> attendanceList = FileHandler.loadFromFile("src/university/data/attendance.json",
-                new TypeToken<List<Attendance>>() {}.getType());
+        for (Course course : courses) {
+            if (course.getId().equals(courseId)) {
+                LectureAttendance lectureAttendance = new LectureAttendance(lecture, new ArrayList<>());
 
-        for (String student : enrolledStudents) {
-            System.out.print("Student: " + student + " (P for Present, A for Absent): ");
-            String status = scanner.nextLine().trim().toUpperCase();
+                for (String student : course.getStudentsEnrolled()) {
+                    System.out.print("Mark attendance for " + student + " (P/A): ");
+                    String status = scanner.nextLine().equalsIgnoreCase("P") ? "Present" : "Absent";
 
-            if (!status.equals("P") && !status.equals("A")) {
-                status = "A";
-            }
+                    lectureAttendance.getStudents().add(new StudentAttendance(student, status));
+                }
 
-            attendanceList.add(new Attendance(courseId, student, status));
-        }
-
-        FileHandler.saveToFile(attendanceList, "src/university/data/attendance.json");
-        System.out.println("Attendance marked successfully!");
-    }
-
-    public void viewAttendance() {
-        List<Attendance> attendanceList = FileHandler.loadFromFile("src/university/data/attendance.json",
-                new TypeToken<List<Attendance>>() {}.getType());
-
-        System.out.println("\nAttendance Records:");
-        for (Attendance attendance : attendanceList) {
-            if (attendance.getCourse().equals(subject)) {
-                System.out.println(attendance);
+                course.getAttendanceRecords().add(lectureAttendance);
+                FileHandler.saveToFile(courses, "src/university/data/courses.json");
+                System.out.println("Attendance marked successfully for " + lecture);
+                return;
             }
         }
+        System.out.println("Course not found.");
     }
+
+    public void viewAttendance(String courseId) {
+        List<Course> courses = FileHandler.loadFromFile("src/university/data/courses.json",
+                new TypeToken<List<Course>>() {}.getType());
+
+        // Find the course with the given ID
+        for (Course course : courses) {
+            if (course.getId().equals(courseId)) {
+                System.out.println("Attendance Records for Course: " + courseId);
+
+                List<LectureAttendance> attendanceRecords = course.getAttendanceRecords();
+                if (attendanceRecords == null || attendanceRecords.isEmpty()) {
+                    System.out.println("No attendance records available for this course.");
+                    return;
+                }
+
+                // Iterate through attendance records
+                for (LectureAttendance lectureAttendance : attendanceRecords) {
+                    System.out.println("Lecture: " + lectureAttendance.getLectureId());
+
+                    if (lectureAttendance.getStudents() == null || lectureAttendance.getStudents().isEmpty()) {
+                        System.out.println("No students marked for this lecture.");
+                        continue;
+                    }
+
+                    for (StudentAttendance studentAttendance : lectureAttendance.getStudents()) {
+                        System.out.println("- " + studentAttendance.getStudent() + ": " + studentAttendance.getStatus());
+                    }
+                }
+                return;
+            }
+        }
+
+        System.out.println("Course not found.");
+    }
+
+
+
     public void assignGrades() {
         Scanner scanner = new Scanner(System.in);
 
@@ -143,5 +175,4 @@ public class Teacher extends User {
 
         System.out.println("Grades assigned successfully!");
     }
-
 }

@@ -1,1 +1,34 @@
-[{"student":"r_demessinov"},{"course":"CS101","student":"r_demessinov","status":"P"},{"course":"CS101","student":"student2","status":"P"}]
+[
+  {
+    "id": "CS101",
+    "course": "Introduction to Computer Science",
+    "attendanceRecords": [
+      {
+        "lectureId": "Lecture 1",
+        "students": [
+          {
+            "student": "r_demessinov",
+            "status": "Present"
+          },
+          {
+            "student": "student2",
+            "status": "Present"
+          }
+        ]
+      },
+      {
+        "lectureId": "Lecture 2",
+        "students": [
+          {
+            "student": "r_demessinov",
+            "status": "Present"
+          },
+          {
+            "student": "student2",
+            "status": "Absent"
+          }
+        ]
+      }
+    ]
+  }
+]
