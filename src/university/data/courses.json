@@ -5,7 +5,7 @@
     "credits": 3,
     "type": "LECTURE",
     "prerequisite": null,
-    "studentsEnrolled": ["r_demessinov", "student2"]
+    "studentsEnrolled": ["r_demessinov", "m_nuraliyev"]
   },
   {
     "id": "CS102",
@@ -21,7 +21,7 @@
     "credits": 3,
     "type": "LABORATORY",
     "prerequisite": "CS102",
-    "studentsEnrolled": ["student3", "student4"]
+    "studentsEnrolled": ["m_nuraliyev"]
   },
   {
     "id": "CS104",
@@ -29,6 +29,6 @@
     "credits": 4,
     "type": "LECTURE",
     "prerequisite": "CS102",
-    "studentsEnrolled": []
+    "studentsEnrolled": ["m_nuraliyev", "r_demessinov"]
   }
 ]
