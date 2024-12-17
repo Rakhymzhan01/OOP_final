@@ -4,6 +4,7 @@ import university.utils.FileHandler;
 import university.core.Student;
 import university.core.Teacher;
 import university.core.Manager;
+import university.finance.FinanceManager;
 import university.news.News;
 import university.core.User;
 import com.google.gson.reflect.TypeToken;
@@ -17,6 +18,7 @@ public class Main {
     private static final String STUDENT_FILE = "src/university/data/students.json";
     private static final String TEACHER_FILE = "src/university/data/teachers.json";
     private static final String MANAGER_FILE = "src/university/data/managers.json";
+    private static final String FINANCE_MANAGER_FILE = "src/university/data/budget.json";
 
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
@@ -28,7 +30,7 @@ public class Main {
             System.out.println("3 - Exit");
             System.out.print("Enter your choice: ");
 
-            int choice = scanner.nextInt(); // Get user input
+            int choice = scanner.nextInt();
             scanner.nextLine(); // Consume newline character
 
             switch (choice) {
@@ -36,7 +38,7 @@ public class Main {
                 case 2 -> login();
                 case 3 -> {
                     System.out.println("Exiting the system. Goodbye!");
-                    return; // Exit the program
+                    return;
                 }
                 default -> System.out.println("Invalid choice. Please try again.");
             }
@@ -51,9 +53,15 @@ public class Main {
         System.out.println("1 - Student");
         System.out.println("2 - Teacher");
         System.out.println("3 - Manager");
+        System.out.println("4 - Finance Manager");
+        System.out.println("5 - Exit");
         System.out.print("Enter your choice: ");
         int roleChoice = scanner.nextInt();
         scanner.nextLine(); // Consume newline character
+
+        if (roleChoice == 5) {
+            return;
+        }
 
         System.out.print("Enter username: ");
         String username = scanner.nextLine();
@@ -71,7 +79,14 @@ public class Main {
             case 1 -> {
                 System.out.print("Enter faculty: ");
                 String faculty = scanner.nextLine();
-                Student student = new Student(username, password, firstName, lastName, faculty);
+
+                System.out.print("Is the student on grant? (yes/no): ");
+                boolean onGrant = scanner.nextLine().equalsIgnoreCase("yes");
+
+                System.out.print("Does the student have a scholarship? (yes/no): ");
+                boolean scholarship = scanner.nextLine().equalsIgnoreCase("yes");
+
+                Student student = new Student(username, password, firstName, lastName, faculty, onGrant, scholarship);
                 saveUser(student, STUDENT_FILE, new TypeToken<List<Student>>() {}.getType());
                 System.out.println("Student registered successfully!");
             }
@@ -88,6 +103,11 @@ public class Main {
                 Manager manager = new Manager(username, password, firstName, lastName, department);
                 saveUser(manager, MANAGER_FILE, new TypeToken<List<Manager>>() {}.getType());
                 System.out.println("Manager registered successfully!");
+            }
+            case 4 -> {
+                FinanceManager financeManager = new FinanceManager(username, password, firstName, lastName, 0.0);
+                saveUser(financeManager, FINANCE_MANAGER_FILE, new TypeToken<List<FinanceManager>>() {}.getType());
+                System.out.println("Finance Manager registered successfully!");
             }
             default -> System.out.println("Invalid role choice. Registration failed.");
         }
@@ -107,27 +127,34 @@ public class Main {
         Student student = getUser(username, password, STUDENT_FILE, new TypeToken<List<Student>>() {}.getType());
         if (student != null) {
             System.out.println("Welcome, " + student.getFirstName() + "!");
-            student.viewMenu(); // Call Student menu
-            return; // Prevent returning to the main menu
+            student.viewMenu();
+            return;
         }
 
         // Check for Teacher login
         Teacher teacher = getUser(username, password, TEACHER_FILE, new TypeToken<List<Teacher>>() {}.getType());
         if (teacher != null) {
             System.out.println("Welcome, " + teacher.getFirstName() + "!");
-            teacher.viewMenu(); // Call Teacher menu
-            return; // Prevent returning to the main menu
+            teacher.viewMenu();
+            return;
         }
 
         // Check for Manager login
         Manager manager = getUser(username, password, MANAGER_FILE, new TypeToken<List<Manager>>() {}.getType());
         if (manager != null) {
             System.out.println("Welcome, " + manager.getFirstName() + "!");
-            manager.viewMenu(); // Call Manager menu
-            return; // Prevent returning to the main menu
+            manager.viewMenu();
+            return;
         }
 
-        // If authentication fails
+        // Check for Finance Manager login
+        FinanceManager financeManager = getUser(username, password, FINANCE_MANAGER_FILE, new TypeToken<List<FinanceManager>>() {}.getType());
+        if (financeManager != null) {
+            System.out.println("Welcome, " + financeManager.getFirstName() + "!");
+            financeManager.viewMenu();
+            return;
+        }
+
         System.out.println("Invalid credentials. Please try again.");
     }
 
@@ -141,50 +168,10 @@ public class Main {
         return null;
     }
 
-
     // Save user to JSON file
     private static <T> void saveUser(T user, String fileName, Type type) {
         List<T> users = FileHandler.loadFromFile(fileName, type);
         users.add(user);
         FileHandler.saveToFile(users, fileName);
-    }
-
-    // Authenticate user
-    private static <T> boolean authenticate(String username, String password, String fileName, Type type) {
-        List<T> users = FileHandler.loadFromFile(fileName, type);
-        for (T user : users) {
-            if (user instanceof Student s && s.getUsername().equals(username) && s.getPassword().equals(password)) {
-                return true;
-            } else if (user instanceof Teacher t && t.getUsername().equals(username) && t.getPassword().equals(password)) {
-                return true;
-            } else if (user instanceof Manager m && m.getUsername().equals(username) && m.getPassword().equals(password)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    // Display news for students and teachers
-    private static void displayNews() {
-        System.out.println("Latest News:");
-        List<News> newsList = FileHandler.loadFromFile("src/university/data/news.json", new TypeToken<List<News>>() {}.getType());
-        if (newsList == null || newsList.isEmpty()) {
-            System.out.println("No news available.");
-        } else {
-            for (News news : newsList) {
-                System.out.println(news);
-            }
-        }
-    }
-
-    // Fetch manager object
-    private static Manager getManager(String username, String password) {
-        List<Manager> managers = FileHandler.loadFromFile(MANAGER_FILE, new TypeToken<List<Manager>>() {}.getType());
-        for (Manager manager : managers) {
-            if (manager.getUsername().equals(username) && manager.getPassword().equals(password)) {
-                return manager;
-            }
-        }
-        return null;
     }
 }

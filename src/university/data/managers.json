@@ -1,1 +1,3 @@
-[{"department":"OTHER","username":"a_sadykov","password":"123","firstName":"Aldiyar","lastName":"Sadykov"}]
+[
+  {"department":"OTHER","username":"a_sadykov","password":"123","firstName":"Aldiyar","lastName":"Sadykov"}
+]

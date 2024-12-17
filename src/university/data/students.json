@@ -1,1 +1,4 @@
-[{"faculty":"SITE","username":"r_demessinov","password":"1234","firstName":"rakhymzhan","lastName":"demessinov"},{"faculty":"SITE","username":"m_nuraliyev","password":"123","firstName":"Miras","lastName":"Nuraliyev"}]
+[
+  {"faculty":"SITE","onGrant":true,"scholarship":false,"username":"r_demessinov","password":"1234","firstName":"rakhymzhan","lastName":"demessinov"},
+  {"faculty":"SITE","onGrant":true,"scholarship":true,"username":"m_nuraliyev","password":"123","firstName":"Miras","lastName":"Nuraliyev"}
+]
