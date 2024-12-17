@@ -15,24 +15,11 @@ import university.academics.Course;
 
 public class Student extends User {
     private String faculty;
-    private boolean onGrant;
-    private boolean scholarship;
 
-    public Student(String username, String password, String firstName, String lastName, String faculty, boolean onGrant, boolean scholarship) {
+    public Student(String username, String password, String firstName, String lastName, String faculty) {
         super(username, password, firstName, lastName);
         this.faculty = faculty;
-        this.onGrant = onGrant;
-        this.scholarship = scholarship;
     }
-
-    public boolean isOnGrant() {
-        return onGrant;
-    }
-    public void setOnGrant(boolean onGrant) {this.onGrant = onGrant;}
-
-    public boolean isScholarship() {return scholarship;}
-
-    public void setScholarship(boolean scholarship) {this.scholarship = scholarship;}
 
     public String getFaculty() {
         return faculty;
@@ -44,16 +31,6 @@ public class Student extends User {
 
     public String getName() {
         return getFirstName() + " " + getLastName();
-    }
-
-    @Override
-    public String toString() {
-        return "Student Details:\n" +
-                "Username: " + getUsername() + "\n" +
-                "Name: " + getFirstName() + " " + getLastName() + "\n" +
-                "Faculty: " + faculty + "\n" +
-                "Scholarship: " + (scholarship ? "Yes" : "No") + "\n" +
-                "On Grant: " + (onGrant ? "Yes" : "No");
     }
 
     @Override
