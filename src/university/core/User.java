@@ -13,6 +13,10 @@ public abstract class User {
         this.lastName = lastName;
     }
 
+    public String getName() {
+        return firstName + " " + lastName;
+    }
+
     // Getters and setters
     public String getUsername() {
         return username;

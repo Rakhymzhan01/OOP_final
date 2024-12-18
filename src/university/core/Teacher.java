@@ -11,7 +11,7 @@ import com.google.gson.reflect.TypeToken;
 import university.academics.Grade;
 
 
-public class Teacher extends User {
+public class Teacher extends Employee {
     private String subject;
 
     public Teacher(String username, String password, String firstName, String lastName, String subject) {
@@ -121,7 +121,7 @@ public class Teacher extends User {
                 }
 
                 for (LectureAttendance lectureAttendance : course.getAttendanceRecords()) {
-                    System.out.println("Lecture: " + lectureAttendance.getLecture());
+                    System.out.println("Lecture: " + lectureAttendance.getLectureId());
                     for (StudentAttendance studentAttendance : lectureAttendance.getStudents()) {
                         System.out.println("- " + studentAttendance.getStudent() + ": " + studentAttendance.getStatus());
                     }

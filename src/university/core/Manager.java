@@ -9,7 +9,7 @@ import java.lang.reflect.Type;
 import java.util.List;
 import java.util.Scanner;
 
-public class Manager extends User {
+public class Manager extends Employee {
     private static final String STUDENT_FILE = "src/university/data/students.json";
     private static final String NEWS_FILE = "src/university/data/news.json";
 
