@@ -1,8 +1,1 @@
-[
-  {"student":"r_demessinov","course":"CS101","firstAttestation":25.0,"secondAttestation":30.0,"finalExam":40.0},
-  {"student":"r_demessinov","course":"CS102","firstAttestation":20.0,"secondAttestation":25.0,"finalExam":35.0},
-  {"student":"r_demessinov","course":"CS104","firstAttestation":23.0,"secondAttestation":25.0,"finalExam":37.0},
-  {"student":"m_nuraliyev","course":"CS101","firstAttestation":23.0,"secondAttestation":22.0,"finalExam":30.0},
-  {"student":"m_nuraliyev","course":"CS103","firstAttestation":29.0,"secondAttestation":26.0,"finalExam":33.0},
-  {"student":"m_nuraliyev","course":"CS104","firstAttestation":25.0,"secondAttestation":28.0,"finalExam":40.0}
-]
+[{"student":"r_demessinov","course":"CS101","firstAttestation":25.0,"secondAttestation":30.0,"finalExam":40.0},{"student":"r_demessinov","course":"CS102","firstAttestation":20.0,"secondAttestation":25.0,"finalExam":35.0},{"student":"r_demessinov","course":"CS104","firstAttestation":23.0,"secondAttestation":25.0,"finalExam":37.0},{"student":"m_nuraliyev","course":"CS101","firstAttestation":23.0,"secondAttestation":22.0,"finalExam":30.0},{"student":"m_nuraliyev","course":"CS103","firstAttestation":29.0,"secondAttestation":26.0,"finalExam":33.0},{"student":"m_nuraliyev","course":"CS104","firstAttestation":25.0,"secondAttestation":28.0,"finalExam":40.0},{"student":"r_demessinov","course":"СCS50","firstAttestation":26.0,"secondAttestation":23.0,"finalExam":40.0}]
