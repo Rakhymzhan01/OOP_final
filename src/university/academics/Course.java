@@ -7,7 +7,6 @@ import com.google.gson.reflect.TypeToken;
 import java.util.ArrayList;
 
 
-
 public class Course {
     private String id;
     private String name;
@@ -67,6 +66,7 @@ public class Course {
     }
 
     public List<LectureAttendance> getAttendanceRecords() {
+
         return attendanceRecords;
     }
 

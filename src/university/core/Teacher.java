@@ -111,26 +111,17 @@ public class Teacher extends User {
         List<Course> courses = FileHandler.loadFromFile("src/university/data/courses.json",
                 new TypeToken<List<Course>>() {}.getType());
 
-        // Find the course with the given ID
         for (Course course : courses) {
             if (course.getId().equals(courseId)) {
                 System.out.println("Attendance Records for Course: " + courseId);
 
-                List<LectureAttendance> attendanceRecords = course.getAttendanceRecords();
-                if (attendanceRecords == null || attendanceRecords.isEmpty()) {
+                if (course.getAttendanceRecords() == null || course.getAttendanceRecords().isEmpty()) {
                     System.out.println("No attendance records available for this course.");
                     return;
                 }
 
-                // Iterate through attendance records
-                for (LectureAttendance lectureAttendance : attendanceRecords) {
-                    System.out.println("Lecture: " + lectureAttendance.getLectureId());
-
-                    if (lectureAttendance.getStudents() == null || lectureAttendance.getStudents().isEmpty()) {
-                        System.out.println("No students marked for this lecture.");
-                        continue;
-                    }
-
+                for (LectureAttendance lectureAttendance : course.getAttendanceRecords()) {
+                    System.out.println("Lecture: " + lectureAttendance.getLecture());
                     for (StudentAttendance studentAttendance : lectureAttendance.getStudents()) {
                         System.out.println("- " + studentAttendance.getStudent() + ": " + studentAttendance.getStatus());
                     }
@@ -138,7 +129,6 @@ public class Teacher extends User {
                 return;
             }
         }
-
         System.out.println("Course not found.");
     }
 

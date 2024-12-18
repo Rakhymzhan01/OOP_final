@@ -3,32 +3,29 @@
     "id": "CS101",
     "name": "Introduction to Computer Science",
     "credits": 3,
-    "type": "LECTURE",
-    "prerequisite": null,
-    "studentsEnrolled": ["r_demessinov", "m_nuraliyev"]
+    "studentsEnrolled": ["r_demessinov", "m_nuraliyev"],
+    "attendanceRecords": [
+      {
+        "lectureId": "Lecture 1",
+        "students": [
+          { "student": "r_demessinov", "status": "Present" },
+          { "student": "m_nuraliyev", "status": "Present" }
+        ]
+      },
+      {
+        "lectureId": "Lecture 2",
+        "students": [
+          { "student": "r_demessinov", "status": "Present" },
+          { "student": "m_nuraliyev", "status": "Absent" }
+        ]
+      }
+    ]
   },
   {
     "id": "CS102",
     "name": "Data Structures and Algorithms",
     "credits": 4,
-    "type": "LECTURE",
-    "prerequisite": "CS101",
-    "studentsEnrolled": ["r_demessinov"]
-  },
-  {
-    "id": "CS103",
-    "name": "Database Systems",
-    "credits": 3,
-    "type": "LABORATORY",
-    "prerequisite": "CS102",
-    "studentsEnrolled": ["m_nuraliyev"]
-  },
-  {
-    "id": "CS104",
-    "name": "Operating Systems",
-    "credits": 4,
-    "type": "LECTURE",
-    "prerequisite": "CS102",
-    "studentsEnrolled": ["m_nuraliyev", "r_demessinov"]
+    "studentsEnrolled": ["r_demessinov"],
+    "attendanceRecords": []
   }
 ]
