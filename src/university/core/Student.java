@@ -13,12 +13,24 @@ import com.google.gson.reflect.TypeToken; // For TypeToken with Gson
 import university.academics.Course;
 
 
-public class Student extends User {
+public class Student extends Employee {
     private String faculty;
+    private boolean scholarship;
+    private boolean onGrant;
 
-    public Student(String username, String password, String firstName, String lastName, String faculty) {
+    public Student(String username, String password, String firstName, String lastName, String faculty, boolean scholarship, boolean onGrant) {
         super(username, password, firstName, lastName);
         this.faculty = faculty;
+        this.scholarship = scholarship;
+        this.onGrant = onGrant;
+    }
+
+    public boolean isScholarship() {
+        return scholarship; // Getter method
+    }
+
+    public void setScholarship(boolean scholarship) {
+        this.scholarship = scholarship;
     }
 
     public String getFaculty() {
